@@ -3,7 +3,22 @@ memmon
 
 memmon is a LD_PRELOAD hack to monitor memory usage and display stats
 
-sample run:
+
+
+how to build
+------------
+run make
+
+
+
+license
+-------
+mit
+
+
+
+sample run
+----------
 
 $ ./memmon bash -c 'echo hi'
 hi
