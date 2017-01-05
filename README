@@ -1,0 +1,14 @@
+memmon
+======
+
+memmon is a LD_PRELOAD hack to monitor memory usage and display stats
+
+sample run:
+
+$ ./memmon bash -c 'set x{,,,,}{,,,,}{,,,,}{,,,,}{,,,,}{,,,,}{,,,}{,,,}{,,,}; echo $# arguments'
+1000000 arguments
+   peak memory usage:            144181112 bytes
+              malloc:             12252316 times
+              calloc:                  547 times
+             realloc:                   34 times
+                free:              9249775 times
