@@ -96,10 +96,11 @@ static size_t insert_size(void *ptr, size_t size) {
   while (table.k[h] && table.k[h] != DELETED)
     h = (h + 1) & (table.size - 1);
 
+  int deleted = table.k[h] == DELETED;
   table.k[h] = ptr;
   table.v[h] = size;
 
-  if (table.used++ > table.size/2) {
+  if (!deleted && table.used++ > table.size/2) {
     table.size *= 2;
     table.used = 0;
 
