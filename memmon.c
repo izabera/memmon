@@ -25,7 +25,7 @@ static int   (*origposix_memalign)(void **, size_t, size_t);
 #endif
 #if dommap
 static void *(*origmmap          )(void *, size_t, int, int, int, off_t);
-static void *(*origmunmap        )(void *, size_t);
+static int   (*origmunmap        )(void *, size_t);
 static void *(*origmremap        )(void *, size_t, size_t, int, void *);
 #endif
 // no brk and sbrk...
@@ -224,7 +224,7 @@ int munmap(void *ptr, size_t length) {
   count[MUNMAP]++;
   // same problem as above...  but munmap(NULL, x) is invalid (at least on linux)
   if (ptr) totalsize -= lookup(ptr);
-  origmunmap(ptr, length);
+  return origmunmap(ptr, length);
 }
 
 void *mremap(void *old_addr, size_t old_len, size_t new_len, int flags, void *new_addr) {

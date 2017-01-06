@@ -8,7 +8,7 @@ memmon:
 	chmod +x memmon
 
 memmon.so: memmon.c
-	gcc -shared -fPIC memmon.c -o memmon.so -ldl -Ddoalign -Ddommap $(CFLAGS) -std=c99
+	gcc -shared -fPIC memmon.c -o memmon.so -ldl -Ddoalign -Ddommap $(CFLAGS) -std=c99 -Wall -Wextra
 
 clean:
 	rm memmon memmon.so
