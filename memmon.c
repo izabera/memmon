@@ -74,6 +74,7 @@ static struct {
   size_t used, size;
 } table;
 
+#if 0
 // jenkins hash
 static uint32_t hash(void *ptr) {
   char buf[sizeof(void *)];
@@ -89,10 +90,28 @@ static uint32_t hash(void *ptr) {
   ret += ret << 15;
   return ret;
 }
+#else
+// http://stackoverflow.com/a/12996028/2815203
+static uint32_t hash32(void *ptr) {
+  uintptr_t x = (uintptr_t)ptr;
+  x = ((x >> 16) ^ x) * 0x45d9f3b;
+  x = ((x >> 16) ^ x) * 0x45d9f3b;
+  x = (x >> 16) ^ x;
+  return x;
+}
+static uint64_t hash64(void *ptr) {
+  uintptr_t x = (uintptr_t)ptr;
+  x = (x ^ (x >> 30)) * UINT64_C(0xbf58476d1ce4e5b9);
+  x = (x ^ (x >> 27)) * UINT64_C(0x94d049bb133111eb);
+  x = x ^ (x >> 31);
+  return x;
+}
+#define hash(x) (sizeof(x) == sizeof(uint32_t) ? hash32(x) : hash64(x))
+#endif
 
 #define DELETED ((void *)1)
 static size_t insert_size(void *ptr, size_t size) {
-  uint32_t h = hash(ptr) & (table.size - 1);
+  size_t h = hash(ptr) & (table.size - 1);
   while (table.k[h] && table.k[h] != DELETED)
     h = (h + 1) & (table.size - 1);
 
@@ -124,7 +143,7 @@ static inline size_t insert(void *ptr) {
 }
 
 static size_t lookup(void *ptr) {
-  uint32_t h = hash(ptr) & (table.size - 1);
+  size_t h = hash(ptr) & (table.size - 1);
   while (table.k[h] && table.k[h] != ptr)
     h = (h + 1) & (table.size - 1);
 
